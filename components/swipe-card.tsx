@@ -95,7 +95,7 @@ export function SwipeCard({ item, onSwipe, isTop }: SwipeCardProps) {
       )}
 
       {/* Image */}
-      <div className="relative aspect-[3/4] w-full bg-muted">
+      <div className="relative h-[calc(100%-80px)] w-full bg-muted">
         {item.image_url ? (
           <Image
             src={item.image_url || "/placeholder.svg"}
@@ -109,36 +109,63 @@ export function SwipeCard({ item, onSwipe, isTop }: SwipeCardProps) {
             <Tag className="h-12 w-12" />
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-card/95 via-card/60 to-transparent p-5">
-          <h2 className="font-display text-xl font-bold text-card-foreground">{item.title}</h2>
-          <div className="mt-1 flex flex-wrap items-center gap-2">
-            {item.price !== null && (
-              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-sm font-semibold text-primary">
-                ${item.price}
-              </span>
-            )}
-            {item.size && (
-              <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Ruler className="h-3 w-3" />
-                {item.size}
-              </span>
-            )}
-            {item.condition && (
-              <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Sparkles className="h-3 w-3" />
-                {item.condition}
-              </span>
-            )}
-          </div>
-          {item.description && (
-            <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
-          )}
+      </div>
+
+      {/* Info Section - Similar to Hinge profile */}
+      <div className="absolute inset-x-0 bottom-20 bg-card/95 backdrop-blur-sm p-5 space-y-3">
+        <div>
+          <h2 className="font-display text-2xl font-bold text-card-foreground">{item.title}</h2>
           {item.profiles?.display_name && (
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Listed by {item.profiles.display_name}
             </p>
           )}
         </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {item.category && (
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Type</p>
+              <p className="text-sm font-semibold text-card-foreground flex items-center gap-1.5">
+                <Tag className="h-3.5 w-3.5" />
+                {item.category}
+              </p>
+            </div>
+          )}
+          {item.size && (
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Size</p>
+              <p className="text-sm font-semibold text-card-foreground flex items-center gap-1.5">
+                <Ruler className="h-3.5 w-3.5" />
+                {item.size}
+              </p>
+            </div>
+          )}
+          {item.condition && (
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Condition</p>
+              <p className="text-sm font-semibold text-card-foreground flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5" />
+                {item.condition}
+              </p>
+            </div>
+          )}
+          {item.price !== null && (
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Price</p>
+              <p className="text-lg font-bold text-primary">
+                ${item.price}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {item.description && (
+          <div className="space-y-1 pt-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Description</p>
+            <p className="text-sm text-card-foreground line-clamp-2">{item.description}</p>
+          </div>
+        )}
       </div>
 
       {/* Action buttons */}
