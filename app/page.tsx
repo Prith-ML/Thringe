@@ -53,15 +53,15 @@ export default function LandingPage() {
             <div className="relative flex-1">
               <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-border shadow-2xl shadow-primary/10">
                 <Image
-                  src="/images/hero-thrift.jpg"
+                  src="/placeholder.jpg"
                   alt="Curated thrifted clothing collection"
                   fill
                   className="object-cover"
                   priority
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/80 to-transparent p-6">
-                  <p className="font-display text-lg font-semibold text-card">Vintage Denim Jacket</p>
-                  <p className="text-sm text-card/80">Size M &middot; $24</p>
+                  <p className="font-display text-lg font-semibold text-card">Pre-loved Fashion</p>
+                  <p className="text-sm text-card/80">Curated &middot; Sustainable</p>
                 </div>
               </div>
             </div>
