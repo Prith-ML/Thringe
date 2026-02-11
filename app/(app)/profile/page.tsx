@@ -96,73 +96,100 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 py-6">
-      <h1 className="mb-6 font-display text-2xl font-bold text-foreground">Profile</h1>
+    <div className="mx-auto max-w-2xl px-4 py-8">
+      {/* Premium Header */}
+      <div className="mb-8">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+          <User className="h-4 w-4" />
+          Your Account
+        </div>
+        <h1 className="font-display text-4xl font-extrabold text-foreground">Profile</h1>
+        <p className="mt-2 text-base text-muted-foreground">Manage your account settings and preferences</p>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <User className="h-6 w-6" />
+      <Card className="overflow-hidden border-2 border-border/50 shadow-xl">
+        <CardHeader className="bg-gradient-to-br from-card to-card/50 border-b border-border/50 pb-6">
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25">
+              <User className="h-8 w-8" />
             </div>
-            <CardTitle className="font-display">{profile?.display_name || "Your Profile"}</CardTitle>
+            <div>
+              <CardTitle className="font-display text-2xl font-bold">
+                {profile?.display_name || "Your Profile"}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                {profile?.location || "Location not set"}
+              </p>
+            </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="display_name">Display Name</Label>
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <div className="grid gap-3">
+              <Label htmlFor="display_name" className="text-base font-semibold">Display Name</Label>
               <Input
                 id="display_name"
                 name="display_name"
+                className="h-11"
+                placeholder="Enter your display name"
                 defaultValue={profile?.display_name ?? ""}
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="bio">Bio</Label>
+            <div className="grid gap-3">
+              <Label htmlFor="bio" className="text-base font-semibold">Bio</Label>
               <Textarea
                 id="bio"
                 name="bio"
-                rows={3}
-                placeholder="Tell the community about your style..."
+                rows={4}
+                className="resize-none"
+                placeholder="Tell the community about your style and interests..."
                 defaultValue={profile?.bio ?? ""}
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="location">Location</Label>
+            <div className="grid gap-3">
+              <Label htmlFor="location" className="text-base font-semibold">Location</Label>
               <Input
                 id="location"
                 name="location"
+                className="h-11"
                 placeholder="City, State"
                 defaultValue={profile?.location ?? ""}
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="avatar_url">Avatar URL</Label>
+            <div className="grid gap-3">
+              <Label htmlFor="avatar_url" className="text-base font-semibold">Avatar URL</Label>
               <Input
                 id="avatar_url"
                 name="avatar_url"
                 type="url"
+                className="h-11"
                 placeholder="https://example.com/avatar.jpg"
                 defaultValue={profile?.avatar_url ?? ""}
               />
             </div>
 
             {message && (
-              <p className="text-sm text-primary">{message}</p>
+              <div className="rounded-lg bg-primary/10 border border-primary/30 px-4 py-3 text-sm font-medium text-primary">
+                {message}
+              </div>
             )}
 
-            <Button type="submit" disabled={isSaving}>
-              <Save className="mr-2 h-4 w-4" />
+            <Button type="submit" disabled={isSaving} size="lg" className="h-12 shadow-lg shadow-primary/30">
+              <Save className="mr-2 h-5 w-5" />
               {isSaving ? "Saving..." : "Save Profile"}
             </Button>
           </form>
 
-          <div className="mt-6 border-t border-border pt-4">
-            <Button variant="outline" className="w-full bg-transparent" onClick={handleSignOut}>
+          <div className="mt-8 border-t border-border pt-6">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="h-12 w-full border-2 border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive" 
+              onClick={handleSignOut}
+            >
               Sign Out
             </Button>
           </div>

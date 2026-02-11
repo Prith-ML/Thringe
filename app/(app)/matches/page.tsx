@@ -29,10 +29,15 @@ export default function MatchesPage() {
   const matches: Match[] = data?.matches ?? []
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
-      <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-foreground">Matches</h1>
-        <p className="text-sm text-muted-foreground">Your liked items and connections</p>
+    <div className="mx-auto max-w-2xl px-4 py-8">
+      {/* Premium Header */}
+      <div className="mb-8">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+          <Heart className="h-4 w-4" />
+          Your Connections
+        </div>
+        <h1 className="font-display text-4xl font-extrabold text-foreground">Matches</h1>
+        <p className="mt-2 text-base text-muted-foreground">Your liked items and connections</p>
       </div>
 
       {isLoading ? (
@@ -40,49 +45,54 @@ export default function MatchesPage() {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : matches.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border bg-card p-12 text-center">
-          <Heart className="h-10 w-10 text-muted-foreground" />
+        <div className="flex flex-col items-center justify-center gap-6 rounded-3xl border-2 border-dashed border-border/50 bg-gradient-to-br from-card to-card/50 p-12 text-center shadow-xl">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+            <Heart className="h-10 w-10 text-primary" />
+          </div>
           <div>
-            <p className="font-display text-lg font-semibold text-foreground">No matches yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="font-display text-2xl font-bold text-foreground">No matches yet</p>
+            <p className="mt-2 text-base text-muted-foreground">
               Start swiping to find pieces you love!
             </p>
           </div>
-          <Button asChild>
+          <Button size="lg" className="shadow-lg shadow-primary/30" asChild>
             <Link href="/discover">Go Discover</Link>
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {matches.map((match) => (
             <Link key={match.id} href={`/chat/${match.id}`}>
-              <Card className="transition-colors hover:bg-muted/50">
-                <CardContent className="flex items-center gap-4 p-4">
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-muted">
+              <Card className="group overflow-hidden border-2 border-border/50 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10">
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-muted shadow-md transition-transform group-hover:scale-105">
                     {match.clothing_items?.image_url ? (
                       <Image
                         src={match.clothing_items.image_url || "/placeholder.svg"}
                         alt={match.clothing_items.title ?? "Item"}
                         fill
                         className="object-cover"
+                        unoptimized
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-muted-foreground">
-                        <Tag className="h-5 w-5" />
+                        <Tag className="h-6 w-6" />
                       </div>
                     )}
                   </div>
                   <div className="flex-1 overflow-hidden">
-                    <p className="font-display font-semibold text-foreground">
+                    <p className="font-display text-lg font-bold text-foreground">
                       {match.clothing_items?.title ?? "Item"}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      with {match.other_user?.display_name ?? "Unknown"}
+                      with <span className="font-semibold text-foreground">{match.other_user?.display_name ?? "Unknown"}</span>
                     </p>
                   </div>
-                  <div className="flex shrink-0 flex-col items-end gap-1">
-                    <MessageCircle className="h-4 w-4 text-primary" />
-                    <span className="text-xs text-muted-foreground">
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                      <MessageCircle className="h-5 w-5 text-primary" />
+                    </div>
+                    <span className="text-xs font-medium text-muted-foreground">
                       {formatDistanceToNow(new Date(match.created_at), { addSuffix: true })}
                     </span>
                   </div>

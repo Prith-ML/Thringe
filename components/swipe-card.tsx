@@ -65,9 +65,9 @@ export function SwipeCard({ item, onSwipe, isTop }: SwipeCardProps) {
     <div
       ref={cardRef}
       className={cn(
-        "absolute inset-0 cursor-grab select-none overflow-hidden rounded-2xl border border-border bg-card shadow-lg transition-transform",
-        isDragging ? "cursor-grabbing" : "transition-all duration-300",
-        !isTop && "scale-95 opacity-60"
+        "absolute inset-0 cursor-grab select-none overflow-hidden rounded-3xl border-2 border-border/50 bg-card shadow-2xl transition-all",
+        isDragging ? "cursor-grabbing shadow-3xl" : "duration-300",
+        !isTop && "scale-[0.95] opacity-50"
       )}
       style={
         isTop
@@ -82,20 +82,20 @@ export function SwipeCard({ item, onSwipe, isTop }: SwipeCardProps) {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
     >
-      {/* Swipe indicators */}
+      {/* Swipe indicators - Enhanced */}
       {isTop && dragX > 50 && (
-        <div className="absolute left-6 top-6 z-10 rounded-lg border-2 border-primary bg-primary/20 px-4 py-2 font-display text-lg font-bold text-primary">
+        <div className="absolute left-8 top-8 z-20 rounded-2xl border-4 border-primary bg-primary/30 backdrop-blur-sm px-6 py-3 font-display text-2xl font-extrabold text-primary shadow-2xl shadow-primary/50">
           LIKE
         </div>
       )}
       {isTop && dragX < -50 && (
-        <div className="absolute right-6 top-6 z-10 rounded-lg border-2 border-destructive bg-destructive/20 px-4 py-2 font-display text-lg font-bold text-destructive">
+        <div className="absolute right-8 top-8 z-20 rounded-2xl border-4 border-destructive bg-destructive/30 backdrop-blur-sm px-6 py-3 font-display text-2xl font-extrabold text-destructive shadow-2xl shadow-destructive/50">
           PASS
         </div>
       )}
 
-      {/* Image */}
-      <div className="relative h-[calc(100%-80px)] w-full bg-muted">
+      {/* Full Image Background */}
+      <div className="absolute inset-0 bg-muted">
         {item.image_url ? (
           <Image
             src={item.image_url || "/placeholder.svg"}
@@ -103,95 +103,99 @@ export function SwipeCard({ item, onSwipe, isTop }: SwipeCardProps) {
             fill
             className="object-cover"
             draggable={false}
+            unoptimized
           />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
-            <Tag className="h-12 w-12" />
+            <Tag className="h-16 w-16 opacity-30" />
           </div>
         )}
       </div>
 
-      {/* Info Section - Similar to Hinge profile */}
-      <div className="absolute inset-x-0 bottom-20 bg-card/95 backdrop-blur-sm p-5 space-y-3">
-        <div>
-          <h2 className="font-display text-2xl font-bold text-card-foreground">{item.title}</h2>
-          {item.profiles?.display_name && (
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Listed by {item.profiles.display_name}
-            </p>
-          )}
-        </div>
+      {/* Gradient overlays for better readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent pointer-events-none" />
 
-        <div className="grid grid-cols-2 gap-3">
-          {item.category && (
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Type</p>
-              <p className="text-sm font-semibold text-card-foreground flex items-center gap-1.5">
-                <Tag className="h-3.5 w-3.5" />
-                {item.category}
-              </p>
+      {/* Compact Info Badge - Top */}
+      {item.profiles?.display_name && (
+        <div className="absolute left-6 top-6 z-10 rounded-full bg-black/40 backdrop-blur-md px-4 py-2 border border-white/20">
+          <p className="text-xs font-medium text-white/90">
+            by {item.profiles.display_name}
+          </p>
+        </div>
+      )}
+
+      {/* Main Info Section - Bottom, Compact & Elegant */}
+      <div className="absolute inset-x-0 bottom-20 z-10 px-6 pb-6 space-y-4">
+        {/* Title and Price Row */}
+        <div className="flex items-end justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h2 className="font-display text-3xl font-extrabold text-white drop-shadow-2xl truncate">
+              {item.title}
+            </h2>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              {item.category && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-white border border-white/30">
+                  <Tag className="h-3 w-3" />
+                  {item.category}
+                </span>
+              )}
+              {item.size && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-white border border-white/30">
+                  <Ruler className="h-3 w-3" />
+                  {item.size}
+                </span>
+              )}
+              {item.condition && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-white border border-white/30">
+                  <Sparkles className="h-3 w-3" />
+                  {item.condition}
+                </span>
+              )}
             </div>
-          )}
-          {item.size && (
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Size</p>
-              <p className="text-sm font-semibold text-card-foreground flex items-center gap-1.5">
-                <Ruler className="h-3.5 w-3.5" />
-                {item.size}
-              </p>
-            </div>
-          )}
-          {item.condition && (
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Condition</p>
-              <p className="text-sm font-semibold text-card-foreground flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" />
-                {item.condition}
-              </p>
-            </div>
-          )}
+          </div>
           {item.price !== null && (
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Price</p>
-              <p className="text-lg font-bold text-primary">
+            <div className="flex-shrink-0 rounded-2xl bg-primary/90 backdrop-blur-sm px-5 py-3 border-2 border-white/30 shadow-xl">
+              <p className="text-xs font-bold text-primary-foreground/80 uppercase tracking-wider">Price</p>
+              <p className="text-2xl font-extrabold text-white">
                 ${item.price}
               </p>
             </div>
           )}
         </div>
 
+        {/* Description - Subtle */}
         {item.description && (
-          <div className="space-y-1 pt-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Description</p>
-            <p className="text-sm text-card-foreground line-clamp-2">{item.description}</p>
+          <div className="rounded-xl bg-black/30 backdrop-blur-sm px-4 py-3 border border-white/20">
+            <p className="text-sm text-white/90 line-clamp-2 leading-relaxed">{item.description}</p>
           </div>
         )}
       </div>
 
-      {/* Action buttons */}
+      {/* Premium Action Buttons */}
       {isTop && (
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 bg-card p-4">
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-8 bg-gradient-to-t from-card/95 to-card/80 backdrop-blur-xl px-6 py-5 border-t border-border/50">
           <Button
             size="lg"
             variant="outline"
-            className="h-14 w-14 rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive bg-transparent"
+            className="h-16 w-16 rounded-full border-2 border-destructive/40 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive hover:scale-110 bg-background/80 shadow-lg transition-all"
             onClick={(e) => {
               e.stopPropagation()
               onSwipe("left")
             }}
           >
-            <X className="h-6 w-6" />
+            <X className="h-7 w-7" />
             <span className="sr-only">Pass</span>
           </Button>
           <Button
             size="lg"
-            className="h-14 w-14 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+            className="h-20 w-20 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground hover:scale-110 shadow-2xl shadow-primary/50 transition-all border-4 border-white/20"
             onClick={(e) => {
               e.stopPropagation()
               onSwipe("right")
             }}
           >
-            <Heart className="h-6 w-6" />
+            <Heart className="h-8 w-8 fill-current" />
             <span className="sr-only">Like</span>
           </Button>
         </div>

@@ -80,29 +80,38 @@ export default function DiscoverPage() {
 
   return (
     <>
-      <div className="mx-auto max-w-md px-4 py-6">
-        <div className="mb-6 text-center">
-          <h1 className="font-display text-2xl font-bold text-foreground">Discover</h1>
-          <p className="text-sm text-muted-foreground">Swipe right to like, left to pass</p>
+      <div className="mx-auto max-w-md px-4 py-8">
+        {/* Premium Header */}
+        <div className="mb-8 text-center">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+            <Sparkles className="h-4 w-4" />
+            Discover Fashion
+          </div>
+          <h1 className="font-display text-4xl font-extrabold text-foreground">Discover</h1>
+          <p className="mt-2 text-base text-muted-foreground">
+            Swipe right to <span className="font-semibold text-primary">like</span>, left to pass
+          </p>
         </div>
 
         {visibleItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border bg-card p-12 text-center">
-            <Sparkles className="h-10 w-10 text-muted-foreground" />
+          <div className="flex flex-col items-center justify-center gap-6 rounded-3xl border-2 border-border/50 bg-gradient-to-br from-card to-card/50 p-12 text-center shadow-xl">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+              <Sparkles className="h-10 w-10 text-primary" />
+            </div>
             <div>
-              <p className="font-display text-lg font-semibold text-foreground">
+              <p className="font-display text-2xl font-bold text-foreground">
                 {"You've seen everything!"}
               </p>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-2 text-base text-muted-foreground">
                 Check back later for new items, or list your own.
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={handleRefresh}>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button variant="outline" size="lg" onClick={handleRefresh} className="border-2">
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh
+                Refresh Feed
               </Button>
-              <Button asChild>
+              <Button size="lg" className="shadow-lg shadow-primary/30" asChild>
                 <Link href="/my-items">List an Item</Link>
               </Button>
             </div>
@@ -124,23 +133,32 @@ export default function DiscoverPage() {
         )}
       </div>
 
-      {/* Match Dialog */}
+      {/* Premium Match Dialog */}
       <Dialog open={!!matchInfo} onOpenChange={() => setMatchInfo(null)}>
-        <DialogContent className="text-center sm:max-w-sm">
+        <DialogContent className="text-center sm:max-w-md border-2 border-primary/30 bg-gradient-to-br from-card to-card/50">
           <DialogHeader>
-            <DialogTitle className="font-display text-2xl text-primary">
+            {/* Celebration Icon */}
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-2xl shadow-primary/50 animate-in zoom-in-50">
+              <Heart className="h-10 w-10 fill-primary-foreground text-primary-foreground" />
+            </div>
+            <DialogTitle className="font-display text-4xl font-extrabold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               {"It's a Match!"}
             </DialogTitle>
-            <DialogDescription>
-              You liked <span className="font-semibold">{matchInfo?.itemTitle}</span> from{" "}
-              <span className="font-semibold">{matchInfo?.ownerName}</span>. Start a conversation!
+            <DialogDescription className="text-base leading-relaxed pt-2">
+              You liked <span className="font-bold text-foreground">{matchInfo?.itemTitle}</span> from{" "}
+              <span className="font-bold text-foreground">{matchInfo?.ownerName}</span>. 
+              <br />
+              <span className="text-primary font-semibold">Start a conversation now!</span>
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col gap-3 pt-2">
-            <Button asChild>
-              <Link href={`/chat/${matchInfo?.matchId}`}>Send a Message</Link>
+          <div className="flex flex-col gap-3 pt-4">
+            <Button size="lg" className="h-12 shadow-xl shadow-primary/30" asChild>
+              <Link href={`/chat/${matchInfo?.matchId}`}>
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Send a Message
+              </Link>
             </Button>
-            <Button variant="outline" onClick={() => setMatchInfo(null)}>
+            <Button variant="outline" size="lg" className="h-12 border-2" onClick={() => setMatchInfo(null)}>
               Keep Swiping
             </Button>
           </div>
