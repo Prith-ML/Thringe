@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react"
 import useSWR from "swr"
 import { SwipeCard, type ClothingItem } from "@/components/swipe-card"
-import { Loader2, RefreshCw, Sparkles } from "lucide-react"
+import { Loader2, RefreshCw, Sparkles, Heart, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
