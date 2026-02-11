@@ -7,7 +7,7 @@ import { useParams } from "next/navigation"
 import useSWR from "swr"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowLeft, Send, Loader2 } from "lucide-react"
+import { ArrowLeft, Send, Loader2, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
