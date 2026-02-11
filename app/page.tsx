@@ -1,10 +1,30 @@
-import React from "react"
+"use client"
+
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Leaf, Heart, MessageCircle, ShoppingBag } from "lucide-react"
 import Image from "next/image"
 
+const HERO_IMAGES = [
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0nMh2p7FYffIDqDAGwQnrzvUTatQ9WcJmFA&s",
+  "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSdIByAyM_8HhbUdjImiEKc2hdN3_GGoQVY1N4DmW4pnzVMq2ixLSdQd5GO2_UvS6NK5s3PB6-Twssjngp4Hi9zOFS3YwZrElqxS72Vdp0epxEFsbHRYpWN&usqp=CAc",
+  "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQ3DSBXOD3uD9CY2feHOYPFgsdLzUowd9uFobYJ_b-8IiM4Q4y_uREklnJ1l9aSUMtI_9YtKUgk55RMK3FFgqqgcLJGPJi0NuXpVeoxTFWGs5Ug2Q9mn6WEwF9IXv7Q_H1InC5PYO8&usqp=CAc",
+  "https://di2ponv0v5otw.cloudfront.net/posts/2023/09/17/6507cc9b52eee182521c2723/m_6507cd0f91e053c9f85c6756.jpg",
+  "https://di2ponv0v5otw.cloudfront.net/posts/2025/03/29/67e7ac81006e43b6ff7183d9/m_67e7ac81006e43b6ff7183da.jpg",
+]
+
 export default function LandingPage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % HERO_IMAGES.length)
+    }, 3000) // Change image every 3 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="flex min-h-svh flex-col">
       {/* Nav */}
@@ -52,16 +72,41 @@ export default function LandingPage() {
             </div>
             <div className="relative flex-1">
               <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-border shadow-2xl shadow-primary/10">
-                <Image
-                  src="/placeholder.jpg"
-                  alt="Curated thrifted clothing collection"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/80 to-transparent p-6">
+                {HERO_IMAGES.map((src, index) => (
+                  <div
+                    key={src}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${
+                      index === currentImageIndex ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <Image
+                      src={src}
+                      alt={`Thrifted clothing item ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      priority={index === 0}
+                      unoptimized
+                    />
+                  </div>
+                ))}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/80 to-transparent p-6 z-10">
                   <p className="font-display text-lg font-semibold text-card">Pre-loved Fashion</p>
                   <p className="text-sm text-card/80">Curated &middot; Sustainable</p>
+                </div>
+                {/* Carousel indicators */}
+                <div className="absolute bottom-20 left-0 right-0 z-10 flex justify-center gap-2">
+                  {HERO_IMAGES.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`h-1.5 rounded-full transition-all ${
+                        index === currentImageIndex
+                          ? "w-8 bg-card"
+                          : "w-1.5 bg-card/40"
+                      }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
