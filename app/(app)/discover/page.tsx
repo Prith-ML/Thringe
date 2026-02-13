@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import useSWR from "swr"
 import { SwipeCard, type ClothingItem } from "@/components/swipe-card"
-import { Loader2, RefreshCw, Sparkles, Heart, MessageCircle } from "lucide-react"
+import { Loader2, RefreshCw, Sparkles, Heart, MessageCircle, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -18,12 +18,16 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 export default function DiscoverPage() {
   const { data, error, isLoading, mutate } = useSWR("/api/discover", fetcher)
+  const { data: locationData } = useSWR("/api/profile/location", fetcher)
   const [swiped, setSwiped] = useState<string[]>([])
   const [matchInfo, setMatchInfo] = useState<{
     itemTitle: string
     ownerName: string
     matchId: string
   } | null>(null)
+
+  const locationEnabled = locationData?.location?.location_enabled
+  const searchRadius = locationData?.location?.search_radius_miles
 
   const items: ClothingItem[] = data?.items ?? []
   const visibleItems = items.filter((item) => !swiped.includes(item.id))
@@ -92,6 +96,30 @@ export default function DiscoverPage() {
             Swipe right to <span className="font-semibold text-primary">like</span>, left to pass
           </p>
         </div>
+
+        {/* Location Filter Banner */}
+        {locationEnabled && searchRadius && (
+          <div className="mb-6 rounded-xl border-2 border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 p-4 shadow-md">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/20">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-foreground">
+                  Location Filtering Active
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Showing items within {searchRadius} miles
+                </p>
+              </div>
+              <Link href="/profile">
+                <Button variant="ghost" size="sm" className="text-xs">
+                  Adjust
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
 
         {visibleItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-6 rounded-3xl border-2 border-border/50 bg-gradient-to-br from-card to-card/50 p-12 text-center shadow-xl">
