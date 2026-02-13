@@ -28,6 +28,8 @@ export default function DiscoverPage() {
 
   const locationEnabled = locationData?.location?.location_enabled
   const searchRadius = locationData?.location?.search_radius_miles
+  const hasNearbyItems = data?.hasNearbyItems
+  const totalNearbyCount = data?.totalNearbyCount || 0
 
   const items: ClothingItem[] = data?.items ?? []
   const visibleItems = items.filter((item) => !swiped.includes(item.id))
@@ -97,7 +99,7 @@ export default function DiscoverPage() {
           </p>
         </div>
 
-        {/* Location Filter Banner */}
+        {/* Location Filter Banner - Active */}
         {locationEnabled && searchRadius && (
           <div className="mb-6 rounded-xl border-2 border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 p-4 shadow-md">
             <div className="flex items-center gap-3">
@@ -109,12 +111,38 @@ export default function DiscoverPage() {
                   Location Filtering Active
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Showing items within {searchRadius} miles
+                  {hasNearbyItems === false && totalNearbyCount === 0
+                    ? `No items within ${searchRadius} miles - showing all items`
+                    : `Prioritizing items within ${searchRadius} miles`}
                 </p>
               </div>
               <Link href="/profile">
                 <Button variant="ghost" size="sm" className="text-xs">
                   Adjust
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Location Suggestion Banner - Not Enabled */}
+        {!isLoading && !locationEnabled && items.length > 0 && (
+          <div className="mb-6 rounded-xl border-2 border-border/50 bg-muted/30 p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-muted">
+                <MapPin className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-foreground">
+                  Find items near you
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Enable location matching to see nearby items first
+                </p>
+              </div>
+              <Link href="/profile">
+                <Button size="sm" className="text-xs">
+                  Enable
                 </Button>
               </Link>
             </div>
@@ -128,10 +156,14 @@ export default function DiscoverPage() {
             </div>
             <div>
               <p className="font-display text-2xl font-bold text-foreground">
-                {"You've seen everything!"}
+                {items.length === 0 
+                  ? "No items available yet" 
+                  : "You've seen everything!"}
               </p>
               <p className="mt-2 text-base text-muted-foreground">
-                Check back later for new items, or list your own.
+                {items.length === 0
+                  ? "Be the first to list a thrifted find and start the community!"
+                  : "Check back later for new items, or list your own."}
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">

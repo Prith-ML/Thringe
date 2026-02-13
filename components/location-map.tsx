@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { MapPin, Loader2, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -162,16 +163,30 @@ export function LocationMap({
       {/* Radius Control */}
       {latitude !== null && longitude !== null && (
         <div className="space-y-4 rounded-xl border-2 border-border/50 bg-gradient-to-br from-card to-card/50 p-6 shadow-lg">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
               <label className="text-base font-semibold text-foreground">Search Radius</label>
               <p className="text-sm text-muted-foreground mt-1">
                 Find items within this distance
               </p>
             </div>
-            <div className="rounded-full bg-primary/10 px-4 py-2 border border-primary/30">
-              <span className="font-display text-2xl font-bold text-primary">{radius}</span>
-              <span className="ml-1 text-sm font-semibold text-primary">miles</span>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={1}
+                max={500}
+                value={radius}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 1
+                  const clampedValue = Math.min(Math.max(value, 1), 500)
+                  setRadius(clampedValue)
+                  if (latitude !== null && longitude !== null) {
+                    onLocationChange?.(latitude, longitude, clampedValue)
+                  }
+                }}
+                className="h-12 w-24 text-center font-display text-lg font-bold"
+              />
+              <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">miles</span>
             </div>
           </div>
 
@@ -209,8 +224,8 @@ export function LocationMap({
           <ul className="mt-2 space-y-1 ml-4 list-disc">
             <li>Drag the marker to adjust your location manually</li>
             <li>Click anywhere on the map to set a new location</li>
-            <li>Use the slider to change your search radius</li>
-            <li>Only items within the circle will appear in your feed</li>
+            <li>Use the slider or type a number (1-500 miles) for precise control</li>
+            <li>Items within the circle will be shown first in your feed</li>
           </ul>
         </div>
       )}

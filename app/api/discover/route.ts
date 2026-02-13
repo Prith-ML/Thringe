@@ -46,6 +46,8 @@ export async function GET() {
   }
 
   let filteredItems = items ?? []
+  let nearbyItems: typeof filteredItems = []
+  let otherItems: typeof filteredItems = []
 
   // Filter by location if user has location enabled
   if (
@@ -54,26 +56,39 @@ export async function GET() {
     userProfile.longitude &&
     userProfile.search_radius_miles
   ) {
-    filteredItems = filteredItems.filter((item) => {
+    // Separate items into nearby and other
+    filteredItems.forEach((item) => {
       // Check if item owner has location set
-      if (!item.profiles?.latitude || !item.profiles?.longitude) {
-        return false // Don't show items without location
+      if (item.profiles?.latitude && item.profiles?.longitude) {
+        // Calculate distance
+        const distance = calculateDistance(
+          userProfile.latitude!,
+          userProfile.longitude!,
+          item.profiles.latitude,
+          item.profiles.longitude
+        )
+
+        if (distance <= userProfile.search_radius_miles!) {
+          nearbyItems.push(item)
+        } else {
+          otherItems.push(item)
+        }
+      } else {
+        // Items without location go to "other"
+        otherItems.push(item)
       }
-
-      // Calculate distance
-      const distance = calculateDistance(
-        userProfile.latitude!,
-        userProfile.longitude!,
-        item.profiles.latitude,
-        item.profiles.longitude
-      )
-
-      return distance <= userProfile.search_radius_miles!
     })
+
+    // Prioritize nearby items, but include others if needed
+    filteredItems = [...nearbyItems, ...otherItems]
   }
 
   // Limit to 10 items after filtering
   const limitedItems = filteredItems.slice(0, 10)
 
-  return NextResponse.json({ items: limitedItems })
+  return NextResponse.json({ 
+    items: limitedItems,
+    hasNearbyItems: nearbyItems.length > 0,
+    totalNearbyCount: nearbyItems.length 
+  })
 }
