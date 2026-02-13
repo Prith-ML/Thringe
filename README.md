@@ -2,7 +2,7 @@
 
 A swipe-based marketplace for thrifted clothing. Think Tinder meets sustainable fashion.
 
-Check it out! - thringe-five.vercel.app/
+🚀 [Check it out!](https://thringe-five.vercel.app/)
 
 ## What is ThrinGe?
 
